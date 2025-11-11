@@ -5,6 +5,12 @@ export class CreateAdminDto {
   @Matches(/^[A-Za-z\s]+$/, { message: 'Name must contain only alphabets and spaces' })
   name: string;
 
+  @IsEmail({}, { message: 'Email address must be valid' })
+  @Matches(/^[\w.%+-]+@[\w.-]+\.xyz$/, {
+    message: 'Email must end with the .xyz domain',
+  })
+  email: string;
+
   @IsString()
   @IsNotEmpty({ message: 'Password is required' })
   @Matches(/^(?=.*[@#$&]).+$/, {
@@ -12,15 +18,12 @@ export class CreateAdminDto {
   })
   password: string;
 
-  @IsOptional()
-  @IsDateString({}, { message: 'Provided date must be a valid date string (YYYY-MM-DD)' })
-  joiningDate: string;
-
-  @IsOptional()
-  @IsUrl({}, { message: 'Social media link must be a valid URL' })
-  linkedin: string;
+  @Matches(/^\d{10,17}$/, {
+    message: 'NID number must contain only digits (10-17 numbers allowed)',
+  })
+  nidNumber: string;
 
   department: string;
 
-  role: 'Admin' | 'DepartmentHead' | 'Employee';
+  role: 'Admin' | 'Manager' | 'Employee';
 }

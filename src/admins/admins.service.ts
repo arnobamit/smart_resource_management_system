@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { UserDTO } from './users.dto';
+import { CreateAdminDto } from './admins.dto';
 
 @Injectable()
-export class UsersService {
+export class AdminsService {
     getAllUsers(): string {
         return 'All Users fetched successfully';
     }
@@ -15,7 +15,7 @@ export class UsersService {
         };
     }
 
-    createUser(mydata: UserDTO): object {
+    createUser(mydata: CreateAdminDto): object {
         console.log("Service received");
         return {
             message: "User created successfully",
@@ -23,7 +23,7 @@ export class UsersService {
         };
     }
 
-    updateUser(id: number, mydata: UserDTO): object {
+    updateUser(id: number, mydata: CreateAdminDto): object {
         console.log(`Updating user with ID: ${id}`);
         console.log(mydata);
         return {

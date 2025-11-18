@@ -1,8 +1,19 @@
-import { IsString, IsEmail, Matches, IsNotEmpty, IsDateString, IsUrl, IsOptional } from 'class-validator';
+import { IsString, IsEmail, Matches, IsNotEmpty, IsOptional, IsDateString, Length } from 'class-validator';
 
 export class CreateAdminDto {
+  @IsOptional()
+  id?: number;
+
+  @IsOptional()
   @IsString()
-  @Matches(/^[A-Za-z\s]+$/, { message: 'Name must contain only alphabets and spaces' })
+  @Length(1, 150)
+  uniqueId?: string;
+
+
+  @IsString()
+  @Matches(/^[A-Za-z\s]+$/, {
+    message: 'Name must contain only alphabets and spaces',
+  })
   name: string;
 
   @IsEmail({}, { message: 'Email address must be valid' })
@@ -21,9 +32,22 @@ export class CreateAdminDto {
   @Matches(/^\d{10,17}$/, {
     message: 'NID number must contain only digits (10-17 numbers allowed)',
   })
-  nidNumber: string;
+  nid_number: string;
 
+  @IsString()
+  @IsNotEmpty()
   department: string;
 
+  @IsString()
+  @IsNotEmpty()
   role: 'Admin' | 'Manager' | 'Employee';
+
+  @IsOptional()
+  @IsDateString()
+  joiningDate?: string;
+
+  @IsString()
+  @Length(0, 30)
+  @IsOptional()
+  country?: string = 'Unknown';
 }

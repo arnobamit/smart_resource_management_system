@@ -1,0 +1,24 @@
+database: 'SRMS'
+
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
+CREATE TABLE admins (
+    id SERIAL PRIMARY KEY,
+    "uniqueId" VARCHAR(150) NOT NULL DEFAULT uuid_generate_v4(),
+    name VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    nid_number VARCHAR(255) NOT NULL,
+    department VARCHAR(255) NOT NULL,
+    role VARCHAR(50) NOT NULL,
+    "joiningDate" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    country VARCHAR(30) NOT NULL DEFAULT 'Unknown'
+);
+
+
+SELECT * FROM admins;
+
+http://localhost:3000/admins/filter/default-country
+
+http://localhost:3000/admins/filter/joining-date?date=2025-11-17
+

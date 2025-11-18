@@ -1,5 +1,21 @@
-import { Controller, Get, Post, Put, Patch, Delete, Body, Param, Query, UsePipes, ValidationPipe,
-    UploadedFile, UseInterceptors, BadRequestException,} from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Put,
+  Patch,
+  Delete,
+  Body,
+  Param,
+  Query,
+  UsePipes,
+  ValidationPipe,
+  UploadedFile,
+  UseInterceptors,
+  BadRequestException,
+  ParseIntPipe,
+} from '@nestjs/common';
+
 import { AdminsService } from './admins.service';
 import { CreateAdminDto } from './admins.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -15,7 +31,7 @@ export class AdminsController {
   }
 
   @Get(':id')
-  getUserById(@Param('id') id: number) {
+  getUserById(@Param('id', ParseIntPipe) id: number) {
     return this.adminsService.getUserById(id);
   }
 
@@ -25,30 +41,48 @@ export class AdminsController {
   }
 
   @Get('filter/role')
-  getUsersByRole(@Query('role') role: string) {
+  getUsersByRole(@Query('role') role: 'Admin' | 'Manager' | 'Employee') {
     return this.adminsService.getUsersByRole(role);
   }
 
+  @Get('filter/joining-date')
+  getUsersByJoiningDate(@Query('date') date: string) {
+    return this.adminsService.getUsersByJoiningDate(date);
+  }
+
+  @Get('filter/default-country')
+  getUsersWithDefaultCountry() {
+    return this.adminsService.getUsersWithDefaultCountry();
+  }
+
   @Post()
-  @UsePipes(new ValidationPipe())
-  createUser(@Body() mydata: CreateAdminDto) {
-    return this.adminsService.createUser(mydata);
+  @UsePipes(new ValidationPipe({ whitelist: true }))
+  createUser(@Body() dto: CreateAdminDto) {
+    return this.adminsService.createUser(dto);
   }
 
   @Put(':id')
-  @UsePipes(new ValidationPipe())
-  updateUser(@Param('id') id: number, @Body() mydata: CreateAdminDto) {
-    return this.adminsService.updateUser(id, mydata);
+  @UsePipes(new ValidationPipe({ whitelist: true }))
+  updateUser(@Param('id', ParseIntPipe) id: number, @Body() dto: CreateAdminDto) {
+    return this.adminsService.updateUser(id, dto);
   }
 
   @Patch(':id/role')
-  @UsePipes(new ValidationPipe())
-  updateUserRole(@Param('id') id: number, @Body('role') role: string) {
-    return this.adminsService.updateUserRole(id, role);
+  updateUserRole(@Param('id', ParseIntPipe) id: number, @Body('role') role: string) {
+    const validRoles = ['Admin', 'Manager', 'Employee'];
+    if (!validRoles.includes(role)) {
+      throw new BadRequestException(`Invalid role. Allowed: ${validRoles.join(', ')}`);
+    }
+    return this.adminsService.updateUserRole(id, role as any);
+  }
+
+  @Patch(':id/country')
+  updateCountry(@Param('id', ParseIntPipe) id: number, @Body('country') country: string) {
+    return this.adminsService.updateCountry(id, country);
   }
 
   @Delete(':id')
-  deleteUser(@Param('id') id: number) {
+  deleteUser(@Param('id', ParseIntPipe) id: number) {
     return this.adminsService.deleteUser(id);
   }
 
@@ -69,17 +103,15 @@ export class AdminsController {
           cb(null, Date.now() + '-' + file.originalname);
         },
       }),
-    }),
+    })
   )
   uploadNid(@UploadedFile() file: Express.Multer.File) {
-    if (!file) {
-      throw new BadRequestException('No file uploaded or invalid file type.');
-    }
+    if (!file) throw new BadRequestException('No file uploaded or invalid file type.');
 
     return {
       message: 'NID image uploaded successfully!',
       filename: file.filename,
-      size: file.size + ' bytes',
+      size: `${file.size} bytes`,
       path: file.path,
     };
   }

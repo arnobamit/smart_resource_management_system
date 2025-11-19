@@ -1,15 +1,6 @@
 import { IsString, IsEmail, Matches, IsNotEmpty, IsOptional, IsDateString, Length } from 'class-validator';
 
 export class CreateAdminDto {
-  @IsOptional()
-  id?: number;
-
-  @IsOptional()
-  @IsString()
-  @Length(1, 150)
-  uniqueId?: string;
-
-
   @IsString()
   @Matches(/^[A-Za-z\s]+$/, {
     message: 'Name must contain only alphabets and spaces',
@@ -23,7 +14,7 @@ export class CreateAdminDto {
   email: string;
 
   @IsString()
-  @IsNotEmpty({ message: 'Password is required' })
+  @IsNotEmpty()
   @Matches(/^(?=.*[@#$&]).+$/, {
     message: 'Password must contain at least one special character (@, #, $, &)',
   })
@@ -39,15 +30,15 @@ export class CreateAdminDto {
   department: string;
 
   @IsString()
-  @IsNotEmpty()
-  role: 'Admin' | 'Manager' | 'Employee';
+  @Matches(/^(Admin|Manager|Employee)$/)
+  role: string;
 
   @IsOptional()
   @IsDateString()
   joiningDate?: string;
 
+  @IsOptional()
   @IsString()
   @Length(0, 30)
-  @IsOptional()
   country?: string = 'Unknown';
 }

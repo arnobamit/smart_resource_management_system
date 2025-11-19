@@ -25,11 +25,10 @@ export class AdminsService {
   }
 
   async createUser(dto: CreateAdminDto): Promise<AdminEntity> {
-    dto.uniqueId = uuid();
-
     const newUser = this.adminRepository.create(dto);
     return await this.adminRepository.save(newUser);
   }
+
 
   async updateUser(id: number, dto: CreateAdminDto): Promise<AdminEntity> {
     const user = await this.getUserById(id);
@@ -52,7 +51,7 @@ export class AdminsService {
   }
 
   async getUsersByDepartment(department: string) {
-    return await this.adminRepository.find({ where: { department } });
+    return await this.adminRepository.find({ where: { department }});
   }
 
   async getUsersByRole(role: 'Admin' | 'Manager' | 'Employee') {
@@ -66,28 +65,28 @@ export class AdminsService {
   }
 
   async getUsersByJoiningDate(dateStr: string) {
-  const date = new Date(dateStr);
+    const date = new Date(dateStr);
 
-  if (isNaN(date.getTime())) {
-    throw new BadRequestException('Invalid date format. Use YYYY-MM-DD');
+    if (isNaN(date.getTime())) {
+      throw new BadRequestException('Invalid date format. Use YYYY-MM-DD');
+    }
+
+    const start = new Date(date);
+    const end = new Date(date);
+
+    start.setHours(0, 0, 0, 0);
+    end.setHours(23, 59, 59, 999);
+
+    return await this.adminRepository.find({
+      where: {
+        joiningDate: Between(start, end),
+      },
+    });
   }
 
-  const start = new Date(date);
-  const end = new Date(date);
-
-  start.setHours(0, 0, 0, 0);
-  end.setHours(23, 59, 59, 999);
-
-  return await this.adminRepository.find({
-    where: {
-      joiningDate: Between(start, end),
-    },
-  });
-}
-
-async getUsersWithDefaultCountry(): Promise<AdminEntity[]> {
-  return await this.adminRepository.find({
-    where: { country: 'Unknown' }
-  });
-}
+  async getUsersWithDefaultCountry(): Promise<AdminEntity[]> {
+    return await this.adminRepository.find({
+      where: { country: 'Unknown' }
+    });
+  }
 }

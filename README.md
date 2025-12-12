@@ -1,7 +1,7 @@
 # 📚 Smart Resource Management System (SRMS)
 
 <p align="center">
-  <img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" />
+  <img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" />
 </p>
 
 <p align="center">A robust and scalable backend application for managing users, assets, and request workflows using the NestJS framework.</p>
@@ -32,51 +32,47 @@ Admins oversee supervisors, supervisors manage employees, and employees interact
 ## 🚀 Key Features
 
 ### 👤 User Hierarchy
-- **Admin** creates Supervisors  
-- **Supervisors** create Employees  
-- **Employees** submit asset requests  
+- **Admin** creates Supervisors  
+- **Supervisors** create Employees  
+- **Employees** submit asset requests  
 
 ### 🔐 Authentication & Authorization
-- JWT-based authentication  
-- Role-Based Access Control (RBAC)  
-- Custom Guards: `AdminGuard`, `SupervisorGuard`, `EmployeeGuard`  
+- JWT-based authentication  
+- Role-Based Access Control (RBAC)  
+- Custom Guards: `AdminGuard`, `SupervisorGuard`, `EmployeeGuard` (located within respective feature modules)  
 
 ### 📦 Asset Management
-- Admins can create, update, and assign assets  
-- Supervisors manage assets assigned to them  
+- Admins can create, update, and assign assets  
+- Supervisors manage assets assigned to them  
 
 ### 📨 Request Workflow
-- Employees submit asset requests → Supervisor gets an email  
-- Supervisor approves or rejects → Employee receives notification  
+- Employees submit asset requests → Supervisor gets an email  
+- Supervisor approves or rejects → Employee receives notification  
 
 ### 💾 Data Persistence
-- PostgreSQL database  
-- Managed with TypeORM entities and relationships  
+- PostgreSQL database  
+- Managed with TypeORM entities and relationships  
 
 ---
 
 ## 🛠 Tech Stack
 
-- **Backend:** NestJS, TypeScript  
-- **Database:** PostgreSQL  
-- **ORM:** TypeORM  
-- **Authentication:** JWT + RBAC  
-- **Email Service:** Nodemailer  
-- **Environment Handling:** dotenv  
+- **Backend:** NestJS, TypeScript  
+- **Database:** PostgreSQL  
+- **ORM:** TypeORM  
+- **Authentication:** JWT + RBAC  
+- **Email Service:** Nodemailer  
+- **Environment Handling:** dotenv  
 
 ---
 
 ## 🏗 Architecture & ER Diagram
 
-The application is structured into independent modules:
+The application uses a **Modular, Feature-Based Architecture** where core logic is grouped by domain (`admin`, `employee`, `supervisor`). Database entities are centralized within the `entities/` module.
 
-- **Auth Module** – JWT login, Guards  
-- **Admin Module**  
-- **Supervisor Module**  
-- **Employee Module**  
-- **Asset Module**  
-- **Request Module** – approval workflow  
-- **Mailer Module**  
+- **Admin, Supervisor, Employee Modules** – Core user roles and business logic.
+- **Entities Module** – Manages shared entities (`Asset`, `RequestInfo`) and their controllers.
+- **Common Module** – Houses cross-cutting concerns like the `MailerService`.
 
 > A complete **ER Diagram** illustrates the relationships between Admin, Supervisor, Employee, Asset, and Request tables.
 
@@ -84,41 +80,43 @@ The application is structured into independent modules:
 
 ## 📁 Folder Structure
 
+The project structure is organized by feature modules:
+
 ```text
 src/
 ├── admin/
-│   ├── admin.controller.ts
-│   ├── admin.dto.ts
-│   ├── admin.entity.ts
-│   ├── admin.guard.ts
-│   ├── admin.module.ts
-│   └── admin.service.ts
+│   ├── admin.controller.ts
+│   ├── admin.dto.ts
+│   ├── admin.entity.ts
+│   ├── admin.guard.ts
+│   ├── admin.module.ts
+│   └── admin.service.ts
 │
 ├── common/
-│   └── mailer.service.ts // The common MailerService
+│   └── mailer.service.ts // The common MailerService
 │
 ├── employee/
-│   ├── employee.controller.ts
-│   ├── employee.dto.ts
-│   ├── employee.entity.ts
-│   ├── employee.guard.ts
-│   ├── employee.module.ts
-│   └── employee.service.ts
+│   ├── employee.controller.ts
+│   ├── employee.dto.ts
+│   ├── employee.entity.ts
+│   ├── employee.guard.ts
+│   ├── employee.module.ts
+│   └── employee.service.ts
 │
 ├── entities/
-│   ├── assets.controller.ts
-│   ├── entities.module.ts
-│   ├── requests.controller.ts
-│   ├── shared.entities.module.ts
-│   └── shared.entities.ts // Contains Asset and RequestInfo entities
+│   ├── assets.controller.ts
+│   ├── entities.module.ts
+│   ├── requests.controller.ts
+│   ├── shared.entities.module.ts
+│   └── shared.entities.ts // Contains Asset and RequestInfo entities
 │
 ├── supervisor/
-│   ├── supervisor.controller.ts
-│   ├── supervisor.dto.ts
-│   ├── supervisor.entity.ts
-│   ├── supervisor.guard.ts
-│   ├── supervisor.module.ts
-│   └── supervisor.service.ts
+│   ├── supervisor.controller.ts
+│   ├── supervisor.dto.ts
+│   ├── supervisor.entity.ts
+│   ├── supervisor.guard.ts
+│   ├── supervisor.module.ts
+│   └── supervisor.service.ts
 │
 ├── app.controller.spec.ts
 ├── app.controller.ts

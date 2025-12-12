@@ -87,15 +87,43 @@ The application is structured into independent modules:
 ```text
 src/
 ├── admin/
-├── assets/
-├── auth/
+│   ├── admin.controller.ts
+│   ├── admin.dto.ts
+│   ├── admin.entity.ts
+│   ├── admin.guard.ts
+│   ├── admin.module.ts
+│   └── admin.service.ts
+│
 ├── common/
-├── decorators/
+│   └── mailer.service.ts // The common MailerService
+│
 ├── employee/
-├── guards/
-├── mail/
-├── request/
+│   ├── employee.controller.ts
+│   ├── employee.dto.ts
+│   ├── employee.entity.ts
+│   ├── employee.guard.ts
+│   ├── employee.module.ts
+│   └── employee.service.ts
+│
+├── entities/
+│   ├── assets.controller.ts
+│   ├── entities.module.ts
+│   ├── requests.controller.ts
+│   ├── shared.entities.module.ts
+│   └── shared.entities.ts // Contains Asset and RequestInfo entities
+│
 ├── supervisor/
+│   ├── supervisor.controller.ts
+│   ├── supervisor.dto.ts
+│   ├── supervisor.entity.ts
+│   ├── supervisor.guard.ts
+│   ├── supervisor.module.ts
+│   └── supervisor.service.ts
+│
+├── app.controller.spec.ts
+├── app.controller.ts
+├── app.module.ts
+├── app.service.ts
 └── main.ts
 ```
 

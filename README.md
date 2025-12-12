@@ -70,11 +70,18 @@ Admins oversee supervisors, supervisors manage employees, and employees interact
 
 The application uses a **Modular, Feature-Based Architecture** where core logic is grouped by domain (`admin`, `employee`, `supervisor`). Database entities are centralized within the `entities/` module.
 
-- **Admin, Supervisor, Employee Modules** – Core user roles and business logic.
-- **Entities Module** – Manages shared entities (`Asset`, `RequestInfo`) and their controllers.
-- **Common Module** – Houses cross-cutting concerns like the `MailerService`.
+- **Admin, Supervisor, Employee Modules** – Core user roles, hierarchy control, and business logic.  
+- **Entities Module** – Shared entities (`Asset`, `RequestInfo`, etc.) with TypeORM integration.  
+- **Common Module** – Cross-cutting utilities including the `MailerService`, guards, decorators, and helpers.
 
-> A complete **ER Diagram** illustrates the relationships between Admin, Supervisor, Employee, Asset, and Request tables.
+### 📌 ER Diagram
+
+<p align="center">
+  <img src="path/to/your/er-diagram.png" width="700" />
+</p>
+
+> The ER diagram illustrates the relationships among Admin, Supervisor, Employee, Asset, and Request tables.
+
 
 ---
 

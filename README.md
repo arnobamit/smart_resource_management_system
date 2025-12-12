@@ -123,7 +123,14 @@ pip install -r requirements.txt
 3. Evaluate the Model(This command loads the saved model and computes the final evaluation metrics on the test set.)Bashpython evaluate.py
    
 ## 🧰 Technologies & Dependencies
-ComponentVersion/LibraryPython3.11Core ML/DLPyTorchTransformersHuggingFace Transformers (T5ForConditionalGeneration, T5Tokenizer)Data HandlingHuggingFace Datasets, NumPy, PandasML/MetricsScikit-learnVisualizationMatplotlib, Seaborn
+| Component         | Libraries                           |
+| ----------------- | ----------------------------------- |
+| **Python**        | 3.11                                |
+| **Core ML / DL**  | PyTorch, HuggingFace Transformers   |
+| **Data Handling** | HuggingFace Datasets, NumPy, Pandas |
+| **ML & Metrics**  | scikit-learn                        |
+| **Visualization** | Matplotlib, Seaborn                 |
+
 ## 🔮 Future Work
 The following steps are planned to expand and enhance the prompt injection detection system:Model Scaling: Test larger T5 models (e.g., T5-base, T5-large) or evaluate encoder-only architectures such as RoBERTa or DeBERTa for potential performance gains.Adversarial Robustness: Integrate adversarial training techniques (e.g., HotFlip or AutoPrompt) into the pipeline to enhance the model's robustness against sophisticated, unseen attacks.Real-time Deployment: Develop a high-performance, real-time detector API using frameworks like FastAPI.Multilingual Support: Expand testing and fine-tuning to include multilingual injection datasets.Explainability: Implement LIME or SHAP methods to provide model explainability, helping to understand why a prompt is flagged as injected.
 ## 📄 License

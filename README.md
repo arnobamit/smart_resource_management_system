@@ -26,7 +26,6 @@ This project is a back-end solution built with the **NestJS** framework, utilizi
 The following diagram illustrates the relationships between the core entities in the SRMS application.
 
 
-
 ---
 
 ## ⚙️ Project Setup
@@ -37,31 +36,6 @@ The following diagram illustrates the relationships between the core entities in
 2.  PostgreSQL Database instance
 3.  Updated `.env` file with PostgreSQL and Email credentials.
 
-## Compile and run the project
-
-```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
-```
-
-## Run tests
-
-```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
-```
 
 ### Configuration
 
@@ -81,6 +55,33 @@ MAIL_HOST=smtp.gmail.com
 MAIL_PORT=587
 MAIL_USER=your_email@gmail.com
 MAIL_PASS=your_app_password
+```
+
+### Compile and run the project
+
+```bash
+# development
+$ npm run start
+
+# watch mode
+$ npm run start:dev
+
+# production mode
+$ npm run start:prod
+```
+
+### Run tests
+
+```bash
+# unit tests
+$ npm run test
+
+# e2e tests
+$ npm run test:e2e
+
+# test coverage
+$ npm run test:cov
+```
 
 ## License
 

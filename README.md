@@ -12,7 +12,6 @@ This repository presents a complete implementation, evaluation, and comparative 
 * [🧪 Evaluation Results](#evaluation-results)
 * [🆚 Comparative Analysis](#comparative-analysis)
 * [🚀 Quick Start](#quick-start)
-* [🗂️ Repository Structure](#repository-structure)
 * [🧰 Technologies & Dependencies](#technologies--dependencies)
 * [🔮 Future Work](#future-work)
 * [📄 License](#license)
@@ -118,3 +117,14 @@ The chart visually compares the performance metrics of the top models.
 ### 1. Install Dependencies
 ```bash
 pip install -r requirements.txt
+```
+
+2. Train the Model(This command executes the training process defined in the notebook, saving the model weights to models/best_t5.pth.)Bashpython train_t5.py
+3. Evaluate the Model(This command loads the saved model and computes the final evaluation metrics on the test set.)Bashpython evaluate.py
+   
+## 🧰 Technologies & Dependencies
+ComponentVersion/LibraryPython3.11Core ML/DLPyTorchTransformersHuggingFace Transformers (T5ForConditionalGeneration, T5Tokenizer)Data HandlingHuggingFace Datasets, NumPy, PandasML/MetricsScikit-learnVisualizationMatplotlib, Seaborn
+## 🔮 Future Work
+The following steps are planned to expand and enhance the prompt injection detection system:Model Scaling: Test larger T5 models (e.g., T5-base, T5-large) or evaluate encoder-only architectures such as RoBERTa or DeBERTa for potential performance gains.Adversarial Robustness: Integrate adversarial training techniques (e.g., HotFlip or AutoPrompt) into the pipeline to enhance the model's robustness against sophisticated, unseen attacks.Real-time Deployment: Develop a high-performance, real-time detector API using frameworks like FastAPI.Multilingual Support: Expand testing and fine-tuning to include multilingual injection datasets.Explainability: Implement LIME or SHAP methods to provide model explainability, helping to understand why a prompt is flagged as injected.
+## 📄 License
+This project is licensed under the MIT License.

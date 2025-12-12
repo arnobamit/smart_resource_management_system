@@ -1,204 +1,110 @@
-# 📚 Smart Resource Management System (SRMS)
+# 🛡️ Prompt Injection Attack Detection using T5-small and Comparative Analysis
 
-<p align="center">
-  <img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" />
-</p>
+This project implements and evaluates a text classification model using **T5-small** for the task of detecting **Prompt Injection Attacks** against Large Language Models (LLMs). The model is trained to classify prompts as either "Clean" (label 0) or "Injected" (label 1).
 
-<p align="center">A robust and scalable backend application for managing users, assets, and request workflows using the NestJS framework.</p>
+The repository includes a comprehensive comparative analysis, benchmarking the T5-small model's performance against several other transformer, deep learning (DL), and traditional machine learning (ML) models.
 
----
+## 📝 Project Overview
 
-## 📑 Table of Contents
-- [Overview](#-overview)
-- [Key Features](#-key-features)
-- [Tech Stack](#-tech-stack)
-- [Architecture & ER Diagram](#-architecture--er-diagram)
-- [Folder Structure](#-folder-structure)
-- [Setup & Installation](#-setup--installation)
-- [Environment Variables](#-environment-variables)
-- [Running the Project](#-running-the-project)
-- [Testing](#-testing)
-- [License](#-license)
+Prompt Injection is a security vulnerability where an attacker manipulates an LLM's behavior by inserting malicious instructions into a prompt, potentially overriding its system-level instructions or extracting confidential data. Effective detection of these adversarial prompts is crucial for securing LLM-powered applications.
 
----
+This project uses a binary classification approach (using the T5 text-to-text format: `classify: `) to distinguish between benign and injected prompts.
 
-## 🔍 Overview
-The **Smart Resource Management System (SRMS)** is a backend solution built with **NestJS** and powered by **PostgreSQL** through **TypeORM**. It provides a complete user hierarchy, secure authentication, role-based authorization, and asset request workflows suitable for organizational environments.
+## 📊 Dataset Analysis and Feature Engineering
 
-Admins oversee supervisors, supervisors manage employees, and employees interact with the system through asset requests. All critical operations trigger automated email notifications.
+The analysis started with an exploratory data analysis (EDA) of the combined dataset. The dataset is well-balanced, with 165,628 "Clean" samples (label 0) and 161,526 "Injected" samples (label 1).
 
----
+| Feature | Clean (0) | Injected (1) | Observation |
+| :--- | :---: | :---: | :--- |
+| **Total Samples** | 165,628 | 161,526 | The dataset is well-balanced. |
+| **Character Count** | Lower | Higher | Injected prompts tend to be longer. |
+| **Word Count** | Lower | Higher | Similar trend to Character Count; injected prompts use more words. |
 
-## 🚀 Key Features
+### Exploratory Data Analysis Visualizations
 
-### 👤 User Hierarchy
-- **Admin** creates Supervisors  
-- **Supervisors** create Employees  
-- **Employees** submit asset requests  
+The initial EDA confirmed that basic length features alone are insufficient for robust classification, as the distributions of "Clean" and "Injected" prompts heavily overlap.
 
-### 🔐 Authentication & Authorization
-- JWT-based authentication  
-- Role-Based Access Control (RBAC)  
-- Custom Guards: `AdminGuard`, `SupervisorGuard`, `EmployeeGuard` (located within respective feature modules)  
+* **Feature Distribution Plots**
+    
+    * **Note:** This composite image shows the 3D scatter, pair plots, violin plot, and binned distributions.
+    
+    ![](./path/to/data.jpg)
 
-### 📦 Asset Management
-- Admins can create, update, and assign assets  
-- Supervisors manage assets assigned to them  
+## 💻 Model Implementation (T5-small)
 
-### 📨 Request Workflow
-- Employees submit asset requests → Supervisor gets an email  
-- Supervisor approves or rejects → Employee receives notification  
+The **T5-small** (Text-to-Text Transfer Transformer) model was fine-tuned for the binary classification task.
 
-### 💾 Data Persistence
-- PostgreSQL database  
-- Managed with TypeORM entities and relationships  
+### Preprocessing & Tokenization
+1.  **Text Cleaning:** A custom function (`clean_text`) was applied to remove URLs, digits, punctuation, and emojis.
+2.  **Label Mapping:** Numeric labels were mapped to text targets: `{0: "negative", 1: "positive"}`.
+3.  **T5 Tokenization:** Input texts were prefixed with the T5 task prefix: `"classify: " + text`.
+4.  **Sequence Lengths:** The maximum input length was set to `128` and the maximum target (label) length was set to `5`.
 
----
+### Training and Results
 
-## 🛠 Tech Stack
+The model was trained for 7 epochs using Early Stopping (patience=5), achieving exceptional performance.
 
-- **Backend:** NestJS, TypeScript  
-- **Database:** PostgreSQL  
-- **ORM:** TypeORM  
-- **Authentication:** JWT + RBAC  
-- **Email Service:** Nodemailer  
-- **Environment Handling:** dotenv  
+| Metric | Score |
+| :--- | :---: |
+| **Accuracy** | **0.9908** |
+| **Precision** | 0.9945 |
+| **Recall** | 0.9868 |
+| **F1-Score** | 0.9906 |
+| **ROC-AUC** | 0.9907 |
+| **MCC** | 0.9816 |
+| **Cohen's Kappa** | 0.9816 |
 
----
+### Performance Visualizations
 
-## 🏗 Architecture & ER Diagram
+#### 1. Training Curves (Loss and Accuracy)
+The curves show excellent convergence and stability, with validation loss tracking training loss closely, and high accuracy achieved early in the process.
 
-The application uses a **Modular, Feature-Based Architecture** where core logic is grouped by domain (`admin`, `employee`, `supervisor`). Database entities are centralized within the `entities/` module.
+![](./path/to/t5_small_training_curves.png)
 
-- **Admin, Supervisor, Employee Modules** – Core user roles, hierarchy control, and business logic.  
-- **Entities Module** – Shared entities (`Asset`, `RequestInfo`, etc.) with TypeORM integration.  
-- **Common Module** – Cross-cutting utilities including the `MailerService`, guards, decorators, and helpers.
+#### 2. Confusion Matrix
+The confusion matrix highlights the minimal misclassifications, confirming the model's high predictive power.
 
-### 📌 ER Diagram
+![](./path/to/t5_small_confusion_matrix.png)
 
-<p align="center">
-  <img src="path/to/your/er-diagram.png" width="700" />
-</p>
+#### 3. ROC Curve
+The Area Under the Curve (AUC) score of **0.991** indicates a near-perfect classifier performance.
 
-> The ER diagram illustrates the relationships among Admin, Supervisor, Employee, Asset, and Request tables.
+![](./path/to/t5_small_roc_curve.png)
 
+## 📈 Comparative Analysis
 
----
+The T5-small model's performance was benchmarked against a suite of other models to contextualize its effectiveness.
 
-## 📁 Folder Structure
+* **Transformers:** BERT, DistilBERT, T5-small
+* **Deep Learning:** BiGRU, BiLSTM, GRU, CNN, LSTM
+* **Machine Learning:** LinearSVC, LogisticReg, Ridge, RandomForest (RF), ExtraTrees, AdaBoost, LGBM, GradientBoost, DecisionTree
 
-The project structure is organized by feature modules:
+### Performance Radar Chart
 
-```text
-src/
-├── admin/
-│   ├── admin.controller.ts
-│   ├── admin.dto.ts
-│   ├── admin.entity.ts
-│   ├── admin.guard.ts
-│   ├── admin.module.ts
-│   └── admin.service.ts
-│
-├── common/
-│   └── mailer.service.ts // The common MailerService
-│
-├── employee/
-│   ├── employee.controller.ts
-│   ├── employee.dto.ts
-│   ├── employee.entity.ts
-│   ├── employee.guard.ts
-│   ├── employee.module.ts
-│   └── employee.service.ts
-│
-├── entities/
-│   ├── assets.controller.ts
-│   ├── entities.module.ts
-│   ├── requests.controller.ts
-│   ├── shared.entities.module.ts
-│   └── shared.entities.ts // Contains Asset and RequestInfo entities
-│
-├── supervisor/
-│   ├── supervisor.controller.ts
-│   ├── supervisor.dto.ts
-│   ├── supervisor.entity.ts
-│   ├── supervisor.guard.ts
-│   ├── supervisor.module.ts
-│   └── supervisor.service.ts
-│
-├── app.controller.spec.ts
-├── app.controller.ts
-├── app.module.ts
-├── app.service.ts
-└── main.ts
-```
+![](./path/to/radar.jpg)
 
----
+**Key Takeaways from the Comparison:**
+* **Transformers Dominance:** T5-small, along with the other transformer models (BERT/DistilBERT), significantly outperforms traditional Deep Learning and Machine Learning models across all major metrics.
+* **T5-small Strength:** The T5-small model delivers highly competitive performance among the transformers, offering an excellent balance of speed, size, and classification accuracy for this security task.
 
-## ⚙️ Setup & Installation
+## ⚙️ Technologies and Dependencies
 
-### Prerequisites
-- Node.js (LTS recommended)  
-- PostgreSQL running locally or remotely  
-- Valid email credentials for sending notifications  
+The project uses the Python ecosystem for data manipulation, model training, and evaluation.
 
-### Install Dependencies
-```bash
-npm install
-```
+```python
+# Core Libraries and Frameworks
+import numpy as np
+import pandas as pd
+import torch
+from sklearn.model_selection import train_test_split
+from transformers import T5Tokenizer, T5ForConditionalGeneration
+from torch.utils.data import DataLoader
+from datasets import Dataset
 
-## 🧩 Environment Variables
-
-Create a `.env` file in the root directory:
-```text
-DATABASE_HOST=localhost
-DATABASE_PORT=5432
-DATABASE_USER=postgres
-DATABASE_PASSWORD=12345
-DATABASE_NAME=srms
-
-JWT_SECRET=verysecretkey
-JWT_EXPIRES_IN=3600s
-
-MAIL_HOST=smtp.gmail.com
-MAIL_PORT=587
-MAIL_USER=your_email@gmail.com
-MAIL_PASS=your_app_password
-```
-
----
-
-## ▶️ Running the Project
-
-### Development Mode
-```bash
-npm run start
-```
-
-### Watch Mode
-```bash
-npm run start:dev
-```
-
-### Production Mode
-```bash
-npm run start:prod
-```
-
-## 🧪Testing
-### Run Unit Tests
-```bash
-npm run test
-```
-
-### Run e2e Tests
-```bash
-npm run test:e2e
-```
-
-### Test Coverage
-```bash
-npm run test:cov
-```
-
-## 📄 License
-This project is based on the NestJS framework and is licensed under the MIT License.
+# Visualization and Metrics
+import seaborn as sns
+import matplotlib.pyplot as plt
+from sklearn.metrics import (
+    accuracy_score, precision_score, recall_score, f1_score, matthews_corrcoef,
+    roc_auc_score, confusion_matrix, cohen_kappa_score, ConfusionMatrixDisplay, roc_curve, auc
+)

@@ -37,8 +37,51 @@ The following diagram illustrates the relationships between the core entities in
 2.  PostgreSQL Database instance
 3.  Updated `.env` file with PostgreSQL and Email credentials.
 
-### Installation
+## Compile and run the project
 
 ```bash
-# Install dependencies
-$ npm install
+# development
+$ npm run start
+
+# watch mode
+$ npm run start:dev
+
+# production mode
+$ npm run start:prod
+```
+
+## Run tests
+
+```bash
+# unit tests
+$ npm run test
+
+# e2e tests
+$ npm run test:e2e
+
+# test coverage
+$ npm run test:cov
+```
+
+### Configuration
+
+Ensure your `.env` file is configured correctly for database and email services. **Database host and credentials are required for TypeORM to connect.**
+
+```env
+DATABASE_HOST=localhost
+DATABASE_PORT=5432
+DATABASE_USER=postgres
+DATABASE_PASSWORD=12345
+DATABASE_NAME=srms
+JWT_SECRET=verysecretkey
+JWT_EXPIRES_IN=3600s
+
+# Mailer Configuration (Required for all notifications)
+MAIL_HOST=smtp.gmail.com
+MAIL_PORT=587
+MAIL_USER=your_email@gmail.com
+MAIL_PASS=your_app_password
+
+## License
+
+Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).

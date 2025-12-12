@@ -1,88 +1,170 @@
 # 📚 Smart Resource Management System (SRMS)
 
 <p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
+  <img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" />
 </p>
 
-<p align="center">A progressive Node.js framework application for managing administrative users, supervisors, employees, assets, and asset requests.</p>
+<p align="center">A robust and scalable backend application for managing users, assets, and request workflows using the NestJS framework.</p>
 
 ---
 
-## 🚀 Project Overview
+## 📑 Table of Contents
+- [Overview](#-overview)
+- [Key Features](#-key-features)
+- [Tech Stack](#-tech-stack)
+- [Architecture & ER Diagram](#-architecture--er-diagram)
+- [Folder Structure](#-folder-structure)
+- [Setup & Installation](#-setup--installation)
+- [Environment Variables](#-environment-variables)
+- [Running the Project](#-running-the-project)
+- [Testing](#-testing)
+- [License](#-license)
 
-This project is a back-end solution built with the **NestJS** framework, utilizing **PostgreSQL** as the database via **TypeORM**. It implements a robust user hierarchy and authentication system, complete with **Role-Based Access Control (RBAC)** and email notifications for key events like user registration and asset requests.
+---
 
-### Core Features:
+## 🔍 Overview
+The **Smart Resource Management System (SRMS)** is a backend solution built with **NestJS** and powered by **PostgreSQL** through **TypeORM**. It provides a complete user hierarchy, secure authentication, role-based authorization, and asset request workflows suitable for organizational environments.
 
-* **User Hierarchy:** Admin creates Supervisors, and Supervisors create Employees.
-* **Authentication:** JWT-based login for Admin, Supervisor, and Employee roles.
-* **Role-Based Access Control (RBAC):** Custom Guards (`AdminGuard`, `SupervisorGuard`, `EmployeeGuard`) ensure secure, role-specific access to endpoints.
-* **Asset Management:** Admins create/update assets; Supervisors can be assigned assets and manage employee requests.
-* **Request Workflow:** Employees submit asset requests to their Supervisor (triggering email notification). Supervisors approve/reject requests (triggering return notification email).
-* **Data Persistence:** Uses PostgreSQL for data storage, managed by TypeORM.
+Admins oversee supervisors, supervisors manage employees, and employees interact with the system through asset requests. All critical operations trigger automated email notifications.
 
-## 💾 Database Schema (ER Diagram)
+---
 
-The following diagram illustrates the relationships between the core entities in the SRMS application.
+## 🚀 Key Features
+
+### 👤 User Hierarchy
+- **Admin** creates Supervisors  
+- **Supervisors** create Employees  
+- **Employees** submit asset requests  
+
+### 🔐 Authentication & Authorization
+- JWT-based authentication  
+- Role-Based Access Control (RBAC)  
+- Custom Guards: `AdminGuard`, `SupervisorGuard`, `EmployeeGuard`  
+
+### 📦 Asset Management
+- Admins can create, update, and assign assets  
+- Supervisors manage assets assigned to them  
+
+### 📨 Request Workflow
+- Employees submit asset requests → Supervisor gets an email  
+- Supervisor approves or rejects → Employee receives notification  
+
+### 💾 Data Persistence
+- PostgreSQL database  
+- Managed with TypeORM entities and relationships  
+
+---
+
+## 🛠 Tech Stack
+
+- **Backend:** NestJS, TypeScript  
+- **Database:** PostgreSQL  
+- **ORM:** TypeORM  
+- **Authentication:** JWT + RBAC  
+- **Email Service:** Nodemailer  
+- **Environment Handling:** dotenv  
+
+---
+
+## 🏗 Architecture & ER Diagram
+
+The application is structured into independent modules:
+
+- **Auth Module** – JWT login, Guards  
+- **Admin Module**  
+- **Supervisor Module**  
+- **Employee Module**  
+- **Asset Module**  
+- **Request Module** – approval workflow  
+- **Mailer Module**  
+
+> A complete **ER Diagram** illustrates the relationships between Admin, Supervisor, Employee, Asset, and Request tables.
+
+---
+
+## 📁 Folder Structure
+
+src/
+├── admin/
+├── assets/
+├── auth/
+├── common/
+│ ├── decorators/
+│ └── guards/
+├── employee/
+├── mail/
+├── request/
+├── supervisor/
+└── main.ts
 
 
 ---
 
-## ⚙️ Project Setup
+## ⚙️ Setup & Installation
 
 ### Prerequisites
+- Node.js (LTS recommended)  
+- PostgreSQL running locally or remotely  
+- Valid email credentials for sending notifications  
 
-1.  Node.js (LTS version recommended)
-2.  PostgreSQL Database instance
-3.  Updated `.env` file with PostgreSQL and Email credentials.
+### Install Dependencies
+```bash
+npm install
+```
 
+## 🧩 Environment Variables
 
-### Configuration
+Create a `.env` file in the root directory:
 
-Ensure your `.env` file is configured correctly for database and email services. **Database host and credentials are required for TypeORM to connect.**
-
-```env
 DATABASE_HOST=localhost
 DATABASE_PORT=5432
 DATABASE_USER=postgres
 DATABASE_PASSWORD=12345
 DATABASE_NAME=srms
+
 JWT_SECRET=verysecretkey
 JWT_EXPIRES_IN=3600s
 
-# Mailer Configuration (Required for all notifications)
 MAIL_HOST=smtp.gmail.com
 MAIL_PORT=587
 MAIL_USER=your_email@gmail.com
 MAIL_PASS=your_app_password
-```
 
-### Compile and run the project
 
+---
+
+## ▶️ Running the Project
+
+### Development Mode
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+npm run start
 ```
 
-### Run tests
-
+### Watch Mode
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+npm run start:dev
 ```
 
-## License
+### Production Mode
+```bash
+npm run start:prod
+```
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+## 🧪Testing
+### Run Unit Tests
+```bash
+npm run test
+```
+
+### Run e2e Tests
+```bash
+npm run test:e2e
+```
+
+### Test Coverage
+```bash
+npm run test:cov
+```
+
+## 📄 License
+This project is based on the NestJS framework and is licensed under the MIT License.

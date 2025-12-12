@@ -132,6 +132,12 @@ pip install -r requirements.txt
 | **Visualization** | Matplotlib, Seaborn                 |
 
 ## 🔮 Future Work
-The following steps are planned to expand and enhance the prompt injection detection system:Model Scaling: Test larger T5 models (e.g., T5-base, T5-large) or evaluate encoder-only architectures such as RoBERTa or DeBERTa for potential performance gains.Adversarial Robustness: Integrate adversarial training techniques (e.g., HotFlip or AutoPrompt) into the pipeline to enhance the model's robustness against sophisticated, unseen attacks.Real-time Deployment: Develop a high-performance, real-time detector API using frameworks like FastAPI.Multilingual Support: Expand testing and fine-tuning to include multilingual injection datasets.Explainability: Implement LIME or SHAP methods to provide model explainability, helping to understand why a prompt is flagged as injected.
+Planned extensions of this system include:
+- **Model Scaling**: Evaluate T5-base, T5-large, RoBERTa, and DeBERTa.
+- **Adversarial Robustness**: Integrate HotFlip, AutoPrompt, or gradient-based attack training.
+- **Real-time Deployment**: Build a FastAPI-based inference server.
+- **Multilingual Expansion**: Add multilingual injection datasets.
+- **Explainability**: Integrate LIME or SHAP for prediction insights.
+
 ## 📄 License
 This project is licensed under the MIT License.

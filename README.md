@@ -84,19 +84,20 @@ The application is structured into independent modules:
 
 ## 📁 Folder Structure
 
+```text
 src/
 ├── admin/
 ├── assets/
 ├── auth/
 ├── common/
-│ ├── decorators/
-│ └── guards/
+├── decorators/
 ├── employee/
+├── guards/
 ├── mail/
 ├── request/
 ├── supervisor/
 └── main.ts
-
+```
 
 ---
 

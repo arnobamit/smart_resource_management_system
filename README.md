@@ -1,48 +1,76 @@
-# 🛡️ Prompt Injection Attack Detection using T5-small and Comparative Analysis
+# 🛡️ Prompt Injection Attack Detection using T5-small
+## A Transformer-based System for Securing LLM Applications
 
-This project implements and evaluates a text classification model using **T5-small** for the task of detecting **Prompt Injection Attacks** against Large Language Models (LLMs). The model is trained to classify prompts as either "Clean" (label 0) or "Injected" (label 1).
+This repository presents a complete implementation, evaluation, and comparative study of Prompt Injection Attack Detection using the **T5-small** transformer model. The system classifies user prompts as either **Clean (0)** or **Injected (1)** to protect Large Language Model (LLM) applications from adversarial manipulation.
 
-The repository includes a comprehensive comparative analysis, benchmarking the T5-small model's performance against several other transformer, deep learning (DL), and traditional machine learning (ML) models.
+---
 
-## 📝 Project Overview
+## 📘 Table of Contents
+* [📌 Overview](#overview)
+* [📊 Dataset Analysis](#dataset-analysis)
+* [💻 Model Architecture & Training](#model-architecture--training)
+* [🧪 Evaluation Results](#evaluation-results)
+* [🆚 Comparative Analysis](#comparative-analysis)
+* [🚀 Quick Start](#quick-start)
+* [🗂️ Repository Structure](#repository-structure)
+* [🧰 Technologies & Dependencies](#technologies--dependencies)
+* [🔮 Future Work](#future-work)
+* [📄 License](#license)
 
-Prompt Injection is a security vulnerability where an attacker manipulates an LLM's behavior by inserting malicious instructions into a prompt, potentially overriding its system-level instructions or extracting confidential data. Effective detection of these adversarial prompts is crucial for securing LLM-powered applications.
+---
 
-This project uses a binary classification approach (using the T5 text-to-text format: `classify: `) to distinguish between benign and injected prompts.
+## 📌 Overview
 
-## 📊 Dataset Analysis and Feature Engineering
+Prompt Injection is a critical security vulnerability that allows an attacker to embed malicious instructions into a prompt to override system behavior or extract restricted information from an LLM.
 
-The analysis started with an exploratory data analysis (EDA) of the combined dataset. The dataset is well-balanced, with 165,628 "Clean" samples (label 0) and 161,526 "Injected" samples (label 1).
+This project frames prompt injection detection as a binary classification task using the T5 text-to-text paradigm:
 
-| Feature | Clean (0) | Injected (1) | Observation |
-| :--- | :---: | :---: | :--- |
-| **Total Samples** | 165,628 | 161,526 | The dataset is well-balanced. |
-| **Character Count** | Lower | Higher | Injected prompts tend to be longer. |
-| **Word Count** | Lower | Higher | Similar trend to Character Count; injected prompts use more words. |
+> `classify: <text> → "positive" (Injected) or "negative" (Clean)`
 
-### Exploratory Data Analysis Visualizations
+## 📊 Dataset Analysis
 
-The initial EDA confirmed that basic length features alone are insufficient for robust classification, as the distributions of "Clean" and "Injected" prompts heavily overlap.
+The dataset consists of 327,154 total samples, split as follows:
 
-* **Feature Distribution Plots**
-    
-    * **Note:** This composite image shows the 3D scatter, pair plots, violin plot, and binned distributions.
-    
-    ![](./path/to/data.jpg)
+| Class | Count |
+| :--- | :---: |
+| **Clean (0)** | 165,628 |
+| **Injected (1)** | 161,526 |
 
-## 💻 Model Implementation (T5-small)
+The dataset is balanced and suitable for robust training.
 
-The **T5-small** (Text-to-Text Transfer Transformer) model was fine-tuned for the binary classification task.
+### Key Observations
+* Injected prompts tend to be longer (higher character & word counts).
+* Length-based features overlap significantly, making them insufficient alone for robust detection.
+* Transformers are ideal for capturing the subtle semantic cues of injection attacks.
 
-### Preprocessing & Tokenization
-1.  **Text Cleaning:** A custom function (`clean_text`) was applied to remove URLs, digits, punctuation, and emojis.
-2.  **Label Mapping:** Numeric labels were mapped to text targets: `{0: "negative", 1: "positive"}`.
-3.  **T5 Tokenization:** Input texts were prefixed with the T5 task prefix: `"classify: " + text`.
-4.  **Sequence Lengths:** The maximum input length was set to `128` and the maximum target (label) length was set to `5`.
+### EDA Visualizations
+The full exploratory data analysis (EDA) is visible in the notebook, including feature distributions and correlations.
 
-### Training and Results
+![](./images/data.jpg)
 
-The model was trained for 7 epochs using Early Stopping (patience=5), achieving exceptional performance.
+## 💻 Model Architecture & Training
+
+### 🧹 Preprocessing
+1.  URLs, punctuation, digits, and emojis were removed using a custom cleaning function.
+2.  Labels mapped: `0 → "negative"`, `1 → "positive"`.
+3.  T5 prefix added: `classify: <text>`.
+4.  Tokenization settings:
+    * Max input length: `128`
+    * Max target length: `5`
+
+### 🤖 Model
+Fine-tuning was performed on the encoder-decoder architecture of the **T5ForConditionalGeneration** model (`t5-small` variant).
+
+| Configuration | Value |
+| :--- | :--- |
+| **Epochs** | 7 (Stopped via early stopping) |
+| **Early Stopping** | Patience = 5 |
+| **Optimizer** | AdamW |
+| **Learning Rate** | $3 \times 10^{-4}$ |
+
+## 🧪 Evaluation Results
+
+The T5-small model achieved high performance on the test set, demonstrating robust detection capabilities.
 
 | Metric | Score |
 | :--- | :---: |
@@ -52,59 +80,41 @@ The model was trained for 7 epochs using Early Stopping (patience=5), achieving 
 | **F1-Score** | 0.9906 |
 | **ROC-AUC** | 0.9907 |
 | **MCC** | 0.9816 |
-| **Cohen's Kappa** | 0.9816 |
+| **Cohen’s Kappa** | 0.9816 |
 
 ### Performance Visualizations
 
-#### 1. Training Curves (Loss and Accuracy)
-The curves show excellent convergence and stability, with validation loss tracking training loss closely, and high accuracy achieved early in the process.
+#### Training Curves (Loss and Accuracy)
+![](./images/t5_small_training_curves.png)
 
-![](./path/to/t5_small_training_curves.png)
+#### Confusion Matrix
+![](./images/t5_small_confusion_matrix.png)
 
-#### 2. Confusion Matrix
-The confusion matrix highlights the minimal misclassifications, confirming the model's high predictive power.
+#### ROC Curve
+![](./images/t5_small_roc_curve.png)
 
-![](./path/to/t5_small_confusion_matrix.png)
+## 🆚 Comparative Analysis
 
-#### 3. ROC Curve
-The Area Under the Curve (AUC) score of **0.991** indicates a near-perfect classifier performance.
+The T5-small model was rigorously benchmarked against 13 other models across three categories:
 
-![](./path/to/t5_small_roc_curve.png)
+| Category | Models Benchmarked |
+| :--- | :--- |
+| **Transformers** | T5-small, BERT, DistilBERT |
+| **Deep Learning** | LSTM, BiLSTM, GRU, BiGRU, CNN |
+| **Machine Learning** | LinearSVC, Logistic Regression, Ridge, Random Forest, ExtraTrees, AdaBoost, GradientBoosting, LightGBM, DecisionTree |
 
-## 📈 Comparative Analysis
+### Radar Chart
+The chart visually compares the performance metrics of the top models.
 
-The T5-small model's performance was benchmarked against a suite of other models to contextualize its effectiveness.
+![](./images/radar.jpg)
 
-* **Transformers:** BERT, DistilBERT, T5-small
-* **Deep Learning:** BiGRU, BiLSTM, GRU, CNN, LSTM
-* **Machine Learning:** LinearSVC, LogisticReg, Ridge, RandomForest (RF), ExtraTrees, AdaBoost, LGBM, GradientBoost, DecisionTree
+### Key Insights
+* **Transformers Outperform:** The Transformer-based models (T5-small, BERT, DistilBERT) consistently outperformed all Deep Learning and traditional ML models across all metrics.
+* **T5-small Efficiency:** T5-small achieves an excellent balance of model size, training speed, and superior accuracy, making it a highly practical choice for deployment.
+* **ML Limitations:** Traditional ML methods struggled most with the task, highlighting the need for advanced semantic understanding offered by modern NLP models for injection detection.
 
-### Performance Radar Chart
+## 🚀 Quick Start
 
-![](./path/to/radar.jpg)
-
-**Key Takeaways from the Comparison:**
-* **Transformers Dominance:** T5-small, along with the other transformer models (BERT/DistilBERT), significantly outperforms traditional Deep Learning and Machine Learning models across all major metrics.
-* **T5-small Strength:** The T5-small model delivers highly competitive performance among the transformers, offering an excellent balance of speed, size, and classification accuracy for this security task.
-
-## ⚙️ Technologies and Dependencies
-
-The project uses the Python ecosystem for data manipulation, model training, and evaluation.
-
-```python
-# Core Libraries and Frameworks
-import numpy as np
-import pandas as pd
-import torch
-from sklearn.model_selection import train_test_split
-from transformers import T5Tokenizer, T5ForConditionalGeneration
-from torch.utils.data import DataLoader
-from datasets import Dataset
-
-# Visualization and Metrics
-import seaborn as sns
-import matplotlib.pyplot as plt
-from sklearn.metrics import (
-    accuracy_score, precision_score, recall_score, f1_score, matthews_corrcoef,
-    roc_auc_score, confusion_matrix, cohen_kappa_score, ConfusionMatrixDisplay, roc_curve, auc
-)
+### 1. Install Dependencies
+```bash
+pip install -r requirements.txt

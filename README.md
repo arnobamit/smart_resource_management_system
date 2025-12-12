@@ -142,7 +142,7 @@ npm install
 ## 🧩 Environment Variables
 
 Create a `.env` file in the root directory:
-
+```text
 DATABASE_HOST=localhost
 DATABASE_PORT=5432
 DATABASE_USER=postgres
@@ -156,7 +156,7 @@ MAIL_HOST=smtp.gmail.com
 MAIL_PORT=587
 MAIL_USER=your_email@gmail.com
 MAIL_PASS=your_app_password
-
+```
 
 ---
 
